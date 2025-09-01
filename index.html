@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shooting Master 3D</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: white;
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #startScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+        
+        #gameCanvas {
+            display: block;
+        }
+        
+        #uiLayer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        #scoreDisplay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+        }
+        
+        #timerDisplay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+        }
+        
+        #comboDisplay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ff5555;
+        }
+        
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+            transition: all 0.15s ease;
+        }
+        
+        #crosshair::before,
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        #crosshair::before {
+            width: 12px;
+            height: 1px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #crosshair::after {
+            width: 1px;
+            height: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #resultsScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10;
+        }
+        
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button {
+            background-color: #444;
+            color: white;
+            border: 1px solid #666;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        
+        button:hover {
+            background-color: #666;
+        }
+        
+        table {
+            margin: 20px;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #333;
+        }
+        
+        .highlight {
+            background-color: #334455;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="startScreen">
+            <h1>Shooting Master 3D</h1>
+            <input type="text" id="usernameInput" placeholder="Enter username (2-12 chars)" maxlength="12">
+            <button id="startButton">Start Game</button>
+        </div>
+        
+        <div id="uiLayer">
+            <div id="scoreDisplay">Score: 0</div>
+            <div id="timerDisplay">Time: 60</div>
+            <div id="comboDisplay"></div>
+            <div id="crosshair"></div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="resultsScreen">
+            <h1>Game Over</h1>
+            <h2 id="finalScore">Score: 0</h2>
+            <div id="stats">
+                <p>Accuracy: <span id="accuracyStat">0%</span></p>
+                <p>Targets Hit: <span id="targetsStat">0</span></p>
+                <p>Max Combo: <span id="comboStat">0</span></p>
+            </div>
+            <h3>Leaderboard</h3>
+            <table id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Username</th>
+                        <th>Score</th>
+                        <th>Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                </tbody>
+            </table>
+            <button id="restartButton">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Include Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Game script -->
+    <script src="game.js"></script>
+</body>
+</html>
